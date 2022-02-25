@@ -1,6 +1,7 @@
 package com.yami.shop.common.util;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.experimental.UtilityClass;
 
 import java.util.regex.Pattern;
 
@@ -8,6 +9,7 @@ import java.util.regex.Pattern;
  * 正则表达式工具
  * @author LGH
  */
+@UtilityClass
 public class PrincipalUtil {
 
     /**

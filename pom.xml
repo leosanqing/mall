@@ -28,7 +28,7 @@
         <security.oauth.auto.version>2.3.4.RELEASE</security.oauth.auto.version>
         <java.version>1.8</java.version>
         <guava.version>28.2-jre</guava.version>
-        <hutool.version>4.5.0</hutool.version>
+        <hutool.version>5.7.21</hutool.version>
         <jsoup.version>1.11.3</jsoup.version>
         <poi.version>3.17</poi.version>
         <qiniu.version>7.2.18</qiniu.version>
