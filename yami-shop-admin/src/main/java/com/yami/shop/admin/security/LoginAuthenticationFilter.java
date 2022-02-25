@@ -18,23 +18,17 @@ import com.yami.shop.security.constants.SecurityConstants;
 import com.yami.shop.security.exception.BadCredentialsExceptionBase;
 import com.yami.shop.security.exception.ImageCodeNotMatchExceptionBase;
 import com.yami.shop.security.exception.UsernameNotFoundExceptionBase;
-import com.yami.shop.security.provider.AuthenticationTokenParser;
 import com.yami.shop.security.service.YamiUserDetailsService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletInputStream;
@@ -45,8 +39,8 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * 管理员登陆：
- *       post: http://127.0.0.1:8085/login
- *       {principal:username,credentials:password}
+ * post: http://127.0.0.1:8085/login
+ * {principal:username,credentials:password}
  */
 @Component
 public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
@@ -73,10 +67,10 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
         if (StrUtil.isBlank(requestBody)) {
             throw new AuthenticationServiceException("无法获取输入信息");
         }
-        AdminAuthenticationToken adminAuthenticationToken  =  Json.parseObject(requestBody, AdminAuthenticationToken.class);
+        AdminAuthenticationToken adminAuthenticationToken = Json.parseObject(requestBody, AdminAuthenticationToken.class);
 
 
-        String username = adminAuthenticationToken.getPrincipal() == null?"NONE_PROVIDED":adminAuthenticationToken.getName();
+        String username = adminAuthenticationToken.getPrincipal() == null ? "NONE_PROVIDED" : adminAuthenticationToken.getName();
 
 
         String kaptchaKey = SecurityConstants.SPRING_SECURITY_RESTFUL_IMAGE_CODE + adminAuthenticationToken.getSessionUUID();
@@ -85,7 +79,7 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
 
         RedisUtil.del(kaptchaKey);
 
-        if(StrUtil.isBlank(adminAuthenticationToken.getImageCode()) || !adminAuthenticationToken.getImageCode().equalsIgnoreCase(kaptcha)){
+        if (StrUtil.isBlank(adminAuthenticationToken.getImageCode()) || !adminAuthenticationToken.getImageCode().equalsIgnoreCase(kaptcha)) {
             throw new ImageCodeNotMatchExceptionBase("验证码有误");
         }
 
@@ -100,13 +94,14 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
         String rawPassword = adminAuthenticationToken.getCredentials().toString();
 
         // 密码不正确
-        if (!passwordEncoder.matches(rawPassword,encodedPassword)){
+        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
             throw new BadCredentialsExceptionBase("账号或密码不正确");
         }
 
         if (!user.isEnabled()) {
             throw new UsernameNotFoundExceptionBase("账号已被锁定,请联系管理员");
         }
+
         AdminAuthenticationToken result = new AdminAuthenticationToken(user, adminAuthenticationToken.getCredentials());
         result.setDetails(adminAuthenticationToken.getDetails());
         return result;
