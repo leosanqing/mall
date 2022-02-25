@@ -9,7 +9,7 @@ spring:
             instanceName: clusteredScheduler
             instanceId: AUTO
           jobStore:
-            class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
             driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
             tablePrefix: QRTZ_
             isClustered: true
